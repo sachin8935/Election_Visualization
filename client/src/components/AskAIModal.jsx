@@ -386,7 +386,7 @@ const AskAIModal = ({ isOpen, onClose }) => {
         {/* Footer */}
         <div className="border-t border-gray-200 p-4 bg-gray-50">
           <p className="text-xs text-center text-gray-500">
-            Sachin's Creativity.❤️
+            You can ask any question — Gemini AI can intelligently answer queries using insights directly from the election database.
           </p>
         </div>
       </div>

@@ -3,6 +3,7 @@ export const getPartyWiseSeatShare = async (req, res) => {
   try {
     const { year, years, yearStart, yearEnd, states, parties, genders, constituencies } = req.query;
     
+    
     let query = `
       SELECT 
         "Year",
@@ -55,9 +56,9 @@ export const getPartyWiseSeatShare = async (req, res) => {
     }
 
     if (constituencies) {
-      const constituencyList = constituencies.split(",");
+      const constituencyList = constituencies.split(",").map(c => c.trim().toUpperCase());
       const placeholders = constituencyList.map((_, i) => `$${count + i}`).join(",");
-      query += ` AND "Constituency_Name" IN (${placeholders})`;
+      query += ` AND UPPER("Constituency_Name") IN (${placeholders})`;
       values.push(...constituencyList);
       count += constituencyList.length;
     }
@@ -68,6 +69,8 @@ export const getPartyWiseSeatShare = async (req, res) => {
     `;
 
     const result = await pool.query(query, values);
+    
+    console.log(`✅ Returned ${result.rowCount} rows`);
     
     res.json({
       success: true,
@@ -141,9 +144,9 @@ export const getStateWiseTurnout = async (req, res) => {
     }
 
     if (constituencies) {
-      const constituencyList = constituencies.split(",");
+      const constituencyList = constituencies.split(",").map(c => c.trim().toUpperCase());
       const placeholders = constituencyList.map((_, i) => `$${count + i}`).join(",");
-      query += ` AND "Constituency_Name" IN (${placeholders})`;
+      query += ` AND UPPER("Constituency_Name") IN (${placeholders})`;
       values.push(...constituencyList);
       count += constituencyList.length;
     }
@@ -174,6 +177,7 @@ export const getStateWiseTurnout = async (req, res) => {
 export const getGenderRepresentation = async (req, res) => {
   try {
     const { years, states, parties, constituencies } = req.query;
+
     
     let query = `
       SELECT 
@@ -218,9 +222,9 @@ export const getGenderRepresentation = async (req, res) => {
     }
 
     if (constituencies) {
-      const constituencyList = constituencies.split(",");
+      const constituencyList = constituencies.split(",").map(c => c.trim().toUpperCase());
       const placeholders = constituencyList.map((_, i) => `$${count + i}`).join(",");
-      query += ` AND "Constituency_Name" IN (${placeholders})`;
+      query += ` AND UPPER("Constituency_Name") IN (${placeholders})`;
       values.push(...constituencyList);
       count += constituencyList.length;
     }
@@ -232,7 +236,8 @@ export const getGenderRepresentation = async (req, res) => {
 
     const result = await pool.query(query, values);
     
-    // Normalize the data types
+    console.log(`✅ Returned ${result.rowCount} rows`);
+    
     const formattedData = result.rows.map(row => ({
       ...row,
       Year: parseInt(row.Year),
@@ -260,7 +265,7 @@ export const getGenderRepresentation = async (req, res) => {
 export const getTopPartiesByVoteShare = async (req, res) => {
   try {
     const { year, years, states, parties, genders, constituencies, limit = 10 } = req.query;
-    
+
     // First, get total votes across all parties for the given filters
     let totalVotesQuery = `
       SELECT SUM("Votes"::numeric) as grand_total_votes
@@ -321,9 +326,9 @@ export const getTopPartiesByVoteShare = async (req, res) => {
     }
 
     if (constituencies) {
-      const constituencyList = constituencies.split(",");
+      const constituencyList = constituencies.split(",").map(c => c.trim().toUpperCase());
       const placeholders = constituencyList.map((_, i) => `$${count + i}`).join(",");
-      whereClause += ` AND "Constituency_Name" IN (${placeholders})`;
+      whereClause += ` AND UPPER("Constituency_Name") IN (${placeholders})`;
       values.push(...constituencyList);
       count += constituencyList.length;
     }
@@ -430,9 +435,9 @@ export const getMarginDistribution = async (req, res) => {
     }
 
     if (constituencies) {
-      const constituencyList = constituencies.split(",");
+      const constituencyList = constituencies.split(",").map(c => c.trim().toUpperCase());
       const placeholders = constituencyList.map((_, i) => `$${count + i}`).join(",");
-      query += ` AND "Constituency_Name" IN (${placeholders})`;
+      query += ` AND UPPER("Constituency_Name") IN (${placeholders})`;
       values.push(...constituencyList);
       count += constituencyList.length;
     }
@@ -591,9 +596,9 @@ export const searchCandidateOrConstituency = async (req, res) => {
     }
 
     if (constituencies) {
-      const constituencyList = constituencies.split(",");
+      const constituencyList = constituencies.split(",").map(c => c.trim().toUpperCase());
       const placeholders = constituencyList.map((_, i) => `$${count + i}`).join(",");
-      query += ` AND "Constituency_Name" IN (${placeholders})`;
+      query += ` AND UPPER("Constituency_Name") IN (${placeholders})`;
       values.push(...constituencyList);
       count += constituencyList.length;
     }

@@ -39,8 +39,13 @@ export const getElectionData = async (req, res) => {
     if (states) arrayFilter("State_Name", states.split(","));
     if (parties) arrayFilter("Party", parties.split(","));
     if (genders) arrayFilter("Sex", genders.split(","));
-    if (constituencies)
-      arrayFilter("Constituency_Name", constituencies.split(","));
+    if (constituencies) {
+      const constituencyList = constituencies.split(",").map(c => c.trim().toUpperCase());
+      const placeholders = constituencyList.map((_, i) => `$${count + i}`).join(",");
+      query += ` AND UPPER("Constituency_Name") IN (${placeholders})`;
+      values.push(...constituencyList);
+      count += constituencyList.length;
+    }
 
     // Get total count before pagination
     const countQuery = query.replace('SELECT *', 'SELECT COUNT(*)');
