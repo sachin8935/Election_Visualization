@@ -62,4 +62,25 @@ export const getElectionData = (params = {}) => {
   return api.get('/elections', { params });
 };
 
+// AI Query
+export const askAIQuestion = async (question) => {
+  try {
+    const response = await api.post('/ai/query', { query: question });
+    return response.data;
+  } catch (error) {
+    console.error('AI Query Error:', error);
+    if (error.response?.data) {
+      const errorMsg = error.response.data.message 
+        || error.response.data.error 
+        || error.response.data.reason 
+        || 'Failed to process query';
+      throw new Error(errorMsg);
+    }
+    if (error.request) {
+      throw new Error('No response from server. Please check if the server is running.');
+    }
+    throw new Error(error.message || 'Network error. Please check your connection.');
+  }
+};
+
 export default api;

@@ -1,0 +1,31 @@
+@keyframes rainbow-glow {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 0, 0, 0.3);
+  }
+  16.66% {
+    box-shadow: 0 0 20px rgba(255, 165, 0, 0.5), 0 0 40px rgba(255, 165, 0, 0.3);
+  }
+  33.33% {
+    box-shadow: 0 0 20px rgba(255, 255, 0, 0.5), 0 0 40px rgba(255, 255, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+  }
+  66.66% {
+    box-shadow: 0 0 20px rgba(0, 127, 255, 0.5), 0 0 40px rgba(0, 127, 255, 0.3);
+  }
+  83.33% {
+    box-shadow: 0 0 20px rgba(139, 0, 255, 0.5), 0 0 40px rgba(139, 0, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 0, 0, 0.3);
+  }
+}
+
+.rainbow-glow-button {
+  animation: rainbow-glow 3s ease-in-out infinite;
+}
+
+.rainbow-glow-button:hover {
+  animation: rainbow-glow 1.5s ease-in-out infinite;
+}

@@ -8,6 +8,7 @@ import {
   getMarginDistribution,
   searchCandidateOrConstituency
 } from './analytics.js';
+import { geminiquery } from './gemini.js';
 
 const router = express.Router();
 
@@ -25,5 +26,8 @@ router.get("/analytics/top-parties", getTopPartiesByVoteShare);        // Donut 
 router.get("/analytics/margin-distribution", getMarginDistribution);   // Histogram
 router.get("/search", searchCandidateOrConstituency);                 // Search Table
 router.get("/ping", pingSite);
+
+// AI Query route
+router.post("/ai/query", geminiquery);                                // AI-powered natural language queries
 
 export default router;

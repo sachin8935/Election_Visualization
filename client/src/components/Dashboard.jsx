@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Dashboard.css';
 import ElectionDashboard from './Filter';
 import PartySeatsChart from './PartySeatsChart';
 import StateTurnoutMap from './StateTurnoutMap';
@@ -7,7 +8,8 @@ import GenderRepresentationChart from './GenderRepresentationChart';
 import TopPartiesDonut from './TopPartiesDonut';
 import MarginDistributionChart from './MarginDistributionChart';
 import SearchTable from './SearchTable';
-import { BarChart3, Map, TrendingUp, PieChart, BarChart2, Search as SearchIcon, Home } from 'lucide-react';
+import AskAIModal from './AskAIModal';
+import { BarChart3, Map, TrendingUp, PieChart, BarChart2, Search as SearchIcon, Home, Sparkles } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -27,6 +29,8 @@ const Dashboard = () => {
     marginDistribution: false,
     search: false
   });
+
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 
   const visualizations = [
     { id: 'partySeats', name: 'Party-wise Seat Share', icon: <BarChart3 className="w-5 h-5" />, component: PartySeatsChart },
@@ -72,13 +76,24 @@ const Dashboard = () => {
               <h1 className="text-3xl md:text-4xl font-bold">🗳️ Election Loksabha Data Analytics</h1>
               <p className="text-orange-100 mt-2 text-sm md:text-base">Comprehensive analysis of Indian Lok Sabha elections with advanced filtering</p>
             </div>
-            <button
-              onClick={() => navigate('/')}
-              className="flex items-center gap-2 px-4 py-2 bg-white text-orange-600 hover:bg-orange-50 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-orange-200 whitespace-nowrap font-semibold"
-            >
-              <Home className="w-5 h-5" />
-              <span>Back to Home</span>
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsAIModalOpen(true)}
+                className="rainbow-glow-button flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 
+                  hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all duration-200 
+                  whitespace-nowrap font-semibold"
+              >
+                <Sparkles className="w-5 h-5 animate-pulse" />
+                <span>Ask AI</span>
+              </button>
+              <button
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 px-4 py-2 bg-white text-orange-600 hover:bg-orange-50 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-orange-200 whitespace-nowrap font-semibold"
+              >
+                <Home className="w-5 h-5" />
+                <span>Back to Home</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -179,6 +194,12 @@ const Dashboard = () => {
           </p>
         </div>
       </footer>
+
+      {/* AI Modal */}
+      <AskAIModal 
+        isOpen={isAIModalOpen} 
+        onClose={() => setIsAIModalOpen(false)} 
+      />
     </div>
   );
 };
