@@ -312,34 +312,21 @@ export const geminiquery = async (req, res) => {
     });
   }
 
-  console.log('=== AI Query Request ===');
-  console.log('User question:', query);
-
   try {
-    // Step 1: Generate SQL from natural language
-    console.log('Step 1: Generating SQL with Gemini...');
     const sql = await askGeminiForSQL(query);
-    console.log("Generated SQL:", sql);
 
-    // Step 2: Security validation
-    console.log('Step 2: Validating SQL safety...');
     const safetyCheck = isSafeQuery(sql);
     if (!safetyCheck.safe) {
-      console.log('❌ Query blocked:', safetyCheck.reason);
       return res.status(403).json({
         error: 'Unsafe query detected',
         reason: safetyCheck.reason,
         success: false,
-        sql // Show what was generated for transparency
+        sql
       });
     }
-    console.log('✅ Query is safe');
 
-    // Step 3: Validate SQL syntax
-    console.log('Step 3: Validating SQL syntax...');
     const syntaxCheck = validateSQL(sql);
     if (!syntaxCheck.valid) {
-      console.log('❌ Invalid SQL syntax:', syntaxCheck.error);
       return res.status(400).json({
         error: 'Invalid SQL syntax',
         reason: syntaxCheck.error,
@@ -347,16 +334,10 @@ export const geminiquery = async (req, res) => {
         sql
       });
     }
-    console.log('✅ SQL syntax is valid');
 
-    // Step 4: Execute query
-    console.log('Step 4: Executing query...');
     const dbResult = await pool.query(sql);
     const rows = dbResult.rows;
-    console.log(`✅ Query executed successfully. Rows returned: ${rows.length}`);
 
-    // Step 5: Generate natural language summary
-    console.log('Step 5: Generating natural language summary...');
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const summaryPrompt = `
 The user asked: "${query}"
@@ -372,9 +353,6 @@ If there are interesting patterns or insights, highlight them.`;
 
     const summaryResponse = await model.generateContent(summaryPrompt);
     const answer = summaryResponse.response.text().trim();
-    console.log('✅ Summary generated successfully');
-
-    console.log('=== Query Complete ===\n');
     
     res.json({
       success: true,
@@ -385,8 +363,7 @@ If there are interesting patterns or insights, highlight them.`;
       answer,
     });
   } catch (err) {
-    console.error("❌ Error in geminiquery:", err);
-    console.error("Error stack:", err.stack);
+    console.error("Error in geminiquery:", err);
     res.status(500).json({ 
       success: false,
       error: 'Failed to process query',

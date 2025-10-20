@@ -260,25 +260,18 @@ const AskAIModal = ({ isOpen, onClose }) => {
               </div>
             </div>
           )}
-
-          {/* Response */}
           {response && (
             <div className="space-y-4">
-              {/* Success Header */}
               <div className="flex items-center gap-2 text-green-600">
                 <CheckCircle2 className="w-5 h-5" />
                 <span className="font-semibold">Answer Generated</span>
               </div>
-
-              {/* Question Asked */}
               <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
                 <p className="text-sm font-medium text-purple-800 mb-1">
                   Your Question:
                 </p>
                 <p className="text-purple-900">{response.question}</p>
               </div>
-
-              {/* AI Answer */}
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className="w-5 h-5 text-blue-600" />
@@ -288,8 +281,6 @@ const AskAIModal = ({ isOpen, onClose }) => {
                   {response.answer}
                 </div>
               </div>
-
-              {/* Results Summary */}
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                 <p className="text-sm text-gray-600">
                   <span className="font-semibold text-gray-800">
@@ -304,8 +295,6 @@ const AskAIModal = ({ isOpen, onClose }) => {
                   )}
                 </p>
               </div>
-
-              {/* SQL Query Toggle */}
               <div>
                 <button
                   onClick={() => setShowSQL(!showSQL)}
@@ -323,8 +312,6 @@ const AskAIModal = ({ isOpen, onClose }) => {
                   </div>
                 )}
               </div>
-
-              {/* Data Preview */}
               {response.result && response.result.length > 0 && (
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-3">
@@ -370,8 +357,6 @@ const AskAIModal = ({ isOpen, onClose }) => {
                   </div>
                 </div>
               )}
-
-              {/* Ask Another Question */}
               <button
                 onClick={handleReset}
                 className="w-full py-3 px-6 border-2 border-purple-600 text-purple-600 rounded-xl font-semibold 
@@ -382,8 +367,6 @@ const AskAIModal = ({ isOpen, onClose }) => {
             </div>
           )}
         </div>
-
-        {/* Footer */}
         <div className="border-t border-gray-200 p-4 bg-gray-50">
           <p className="text-xs text-center text-gray-500">
             You can ask any question — Gemini AI can intelligently answer queries using insights directly from the election database.

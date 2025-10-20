@@ -1,8 +1,8 @@
 import pool from "./db.js";
+
 export const getPartyWiseSeatShare = async (req, res) => {
   try {
     const { year, years, yearStart, yearEnd, states, parties, genders, constituencies } = req.query;
-    
     
     let query = `
       SELECT 
@@ -70,8 +70,6 @@ export const getPartyWiseSeatShare = async (req, res) => {
 
     const result = await pool.query(query, values);
     
-    console.log(`✅ Returned ${result.rowCount} rows`);
-    
     res.json({
       success: true,
       data: result.rows,
@@ -87,7 +85,6 @@ export const getPartyWiseSeatShare = async (req, res) => {
   }
 };
 
-// 🗺️ 2️⃣ State-wise Turnout Analysis (For Map/Choropleth)
 export const getStateWiseTurnout = async (req, res) => {
   try {
     const { year, years, yearStart, yearEnd, states, parties, genders, constituencies } = req.query;
@@ -173,11 +170,9 @@ export const getStateWiseTurnout = async (req, res) => {
   }
 };
 
-// 👥 3️⃣ Gender Representation Over Time (For Line Chart)
 export const getGenderRepresentation = async (req, res) => {
   try {
     const { years, states, parties, constituencies } = req.query;
-
     
     let query = `
       SELECT 
@@ -236,8 +231,6 @@ export const getGenderRepresentation = async (req, res) => {
 
     const result = await pool.query(query, values);
     
-    console.log(`✅ Returned ${result.rowCount} rows`);
-    
     const formattedData = result.rows.map(row => ({
       ...row,
       Year: parseInt(row.Year),
@@ -261,7 +254,6 @@ export const getGenderRepresentation = async (req, res) => {
   }
 };
 
-// 🍩 4️⃣ Top Parties by Vote Share (For Donut Chart)
 export const getTopPartiesByVoteShare = async (req, res) => {
   try {
     const { year, years, states, parties, genders, constituencies, limit = 10 } = req.query;
@@ -377,7 +369,6 @@ export const getTopPartiesByVoteShare = async (req, res) => {
   }
 };
 
-// 📈 5️⃣ Margin of Victory Distribution (For Histogram)
 export const getMarginDistribution = async (req, res) => {
   try {
     const { year, years, states, parties, genders, constituencies } = req.query;
@@ -521,7 +512,6 @@ export const getMarginDistribution = async (req, res) => {
   }
 };
 
-// 🔍 6️⃣ Search by Candidate or Constituency (For Table/Filtered Results)
 export const searchCandidateOrConstituency = async (req, res) => {
   try {
     const { 

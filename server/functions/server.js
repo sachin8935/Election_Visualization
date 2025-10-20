@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import routes from './routes.js';
 import pool from './db.js';
+import { swaggerUi, swaggerSpec } from './swagger.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,7 +13,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Election Visualization API Docs',
+}));
 
+// Swagger JSON endpoint
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 // API Routes
 app.use('/api', routes);
@@ -29,6 +40,7 @@ const startServer = async () => {
       console.log(`Server is running on port ${PORT}`);
       console.log(`Access the API at: http://localhost:${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/api/health`);
+      console.log(`📚 Swagger API Documentation: http://localhost:${PORT}/api-docs`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
@@ -58,6 +70,7 @@ startServer();
 // import routes from './routes.js';
 // import pool from './db.js';
 // import functions from 'firebase-functions';
+// import { swaggerUi, swaggerSpec } from './swagger.js';
 
 // const app = express();
 
@@ -68,6 +81,17 @@ startServer();
 
 // // API Routes
 // app.use('/api', routes);
+// // Swagger UI
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+//   customCss: '.swagger-ui .topbar { display: none }',
+//   customSiteTitle: 'Election Visualization API Docs',
+// }));
+
+// // Swagger JSON endpoint
+// app.get('/api-docs.json', (req, res) => {
+//   res.setHeader('Content-Type', 'application/json');
+//   res.send(swaggerSpec);
+// });
 
 // // Health check route (optional but useful)
 // app.get('/health', async (req, res) => {

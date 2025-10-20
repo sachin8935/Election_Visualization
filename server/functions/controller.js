@@ -1,6 +1,5 @@
 import pool from "./db.js";
 
-// 🧩 1️⃣ Get election data with flexible filters
 export const getElectionData = async (req, res) => {
   try {
     const {
@@ -19,7 +18,6 @@ export const getElectionData = async (req, res) => {
     const values = [];
     let count = 1;
 
-    // Year / Year range
     if (year) {
       query += ` AND "Year" = $${count++}`;
       values.push(year);
@@ -28,7 +26,6 @@ export const getElectionData = async (req, res) => {
       values.push(yearStart, yearEnd);
     }
 
-    // Helper for array-based filters
     const arrayFilter = (field, list) => {
       const placeholders = list.map((_, i) => `$${count + i}`).join(",");
       query += ` AND "${field}" IN (${placeholders})`;
@@ -47,12 +44,10 @@ export const getElectionData = async (req, res) => {
       count += constituencyList.length;
     }
 
-    // Get total count before pagination
     const countQuery = query.replace('SELECT *', 'SELECT COUNT(*)');
     const countResult = await pool.query(countQuery, values);
     const totalRecords = parseInt(countResult.rows[0].count);
 
-    // Add pagination
     query += ` ORDER BY "Year" DESC, "State_Name" ASC`;
     query += ` LIMIT $${count++} OFFSET $${count++}`;
     values.push(Math.min(parseInt(limit), 5000), parseInt(offset));
@@ -79,7 +74,6 @@ export const getElectionData = async (req, res) => {
   }
 };
 
-// 🧠 2️⃣ Get unique values for dropdowns
 export const getUniqueValues = async (req, res) => {
   try {
     const validFields = ["State_Name", "Year", "Sex", "Party", "Constituency_Name"];
@@ -112,7 +106,6 @@ export const getUniqueValues = async (req, res) => {
   }
 };
 
-// 🚀 3️⃣ Get all filter options in one call
 export const getAllFilterOptions = async (req, res) => {
   try {
     const fields = ["State_Name", "Year", "Sex", "Party", "Constituency_Name"];
@@ -138,7 +131,6 @@ export const getAllFilterOptions = async (req, res) => {
   }
 };
 
-// 🔍 Debug: List all tables in the database
 export const listTables = async (req, res) => {
   try {
     const query = `
@@ -169,17 +161,14 @@ export const pingSite = async (req, res) => {
   }
 };
 
-// Health check: verify server and DB connectivity
 export const healthCheck = async (req, res) => {
   try {
-    // simple DB ping
     await pool.query('SELECT NOW()');
     return res.status(200).json({
       status: 'ok',
       db: 'connected'
     });
   } catch (err) {
-    console.error('Health check failed:', err);
     return res.status(500).json({
       status: 'error',
       db: 'disconnected',
