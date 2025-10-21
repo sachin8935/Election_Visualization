@@ -71,15 +71,10 @@ startServer();
 // import pool from './db.js';
 // import functions from 'firebase-functions';
 // import { swaggerUi, swaggerSpec } from './swagger.js';
-
 // const app = express();
-
-// // Middleware
 // app.use(cors());
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
-
-// // API Routes
 // app.use('/api', routes);
 // // Swagger UI
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
@@ -92,8 +87,6 @@ startServer();
 //   res.setHeader('Content-Type', 'application/json');
 //   res.send(swaggerSpec);
 // });
-
-// // Health check route (optional but useful)
 // app.get('/health', async (req, res) => {
 //   try {
 //     await pool.query('SELECT NOW()');
@@ -102,6 +95,4 @@ startServer();
 //     res.status(500).json({ status: 'error', db: 'disconnected', error });
 //   }
 // });
-
-// // Export Express app as a Firebase Cloud Function
 // export const api = functions.https.onRequest(app);

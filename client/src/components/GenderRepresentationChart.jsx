@@ -7,6 +7,7 @@ const GenderRepresentationChart = ({ filters = {} }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showWinners, setShowWinners] = useState(false); // Toggle between total candidates and winners
 
   // Check if no year is selected
   const hasNoYear = !filters.years || filters.years.length === 0;
@@ -121,11 +122,26 @@ const GenderRepresentationChart = ({ filters = {} }) => {
 
   return (
     <div>
+      {/* Toggle Checkbox */}
+      <div className="mb-4 flex items-center justify-end">
+        <label className="flex items-center cursor-pointer space-x-2 bg-white px-4 py-2 rounded-lg border border-gray-200 hover:border-orange-300 transition-colors">
+          <input
+            type="checkbox"
+            checked={showWinners}
+            onChange={(e) => setShowWinners(e.target.checked)}
+            className="w-4 h-4 text-orange-600 rounded focus:ring-2 focus:ring-orange-500 cursor-pointer"
+          />
+          <span className="text-sm font-medium text-gray-700">
+            {showWinners ? 'Showing Winners' : 'Show Winners Only'}
+          </span>
+        </label>
+      </div>
+
       <ResponsiveContainer width="100%" height={400}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="year" />
-          <YAxis label={{ value: 'Winners', angle: -90, position: 'insideLeft' }} />
+          <YAxis label={{ value: showWinners ? 'Winners' : 'Total Candidates', angle: -90, position: 'insideLeft' }} />
           <Tooltip 
             contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '8px' }}
             labelStyle={{ fontWeight: 'bold' }}
@@ -134,30 +150,30 @@ const GenderRepresentationChart = ({ filters = {} }) => {
           {showMale && (
             <Line 
               type="monotone" 
-              dataKey="maleWinners" 
+              dataKey={showWinners ? "maleWinners" : "maleCandidates"} 
               stroke="#3b82f6" 
               strokeWidth={2}
-              name="Male Winners"
+              name={showWinners ? "Male Winners" : "Male Candidates"}
               dot={{ r: 5 }}
             />
           )}
           {showFemale && (
             <Line 
               type="monotone" 
-              dataKey="femaleWinners" 
+              dataKey={showWinners ? "femaleWinners" : "femaleCandidates"} 
               stroke="#ec4899" 
               strokeWidth={2}
-              name="Female Winners"
+              name={showWinners ? "Female Winners" : "Female Candidates"}
               dot={{ r: 5 }}
             />
           )}
           {showUnknown && (
             <Line 
               type="monotone" 
-              dataKey="unknownWinners" 
+              dataKey={showWinners ? "unknownWinners" : "unknownCandidates"} 
               stroke="#6b7280" 
               strokeWidth={2}
-              name="Unknown Gender Winners"
+              name={showWinners ? "Unknown Gender Winners" : "Unknown Gender Candidates"}
               dot={{ r: 5 }}
               strokeDasharray="5 5"
             />
@@ -165,10 +181,10 @@ const GenderRepresentationChart = ({ filters = {} }) => {
           {showOther && (
             <Line 
               type="monotone" 
-              dataKey="otherWinners" 
+              dataKey={showWinners ? "otherWinners" : "otherCandidates"} 
               stroke="#f59e0b" 
               strokeWidth={2}
-              name="Other Gender Winners"
+              name={showWinners ? "Other Gender Winners" : "Other Gender Candidates"}
               dot={{ r: 5 }}
               strokeDasharray="5 5"
             />
@@ -257,7 +273,7 @@ const GenderRepresentationChart = ({ filters = {} }) => {
       
       <div className="mt-4 text-center">
         <p className="text-sm text-gray-600">
-          Showing gender representation across {data.length} election year{data.length !== 1 ? 's' : ''}
+          Showing {showWinners ? 'winners' : 'total candidates'} by gender across {data.length} election year{data.length !== 1 ? 's' : ''}
         </p>
         {selectedGenders.length > 0 && (
           <p className="text-xs text-gray-500 mt-1">

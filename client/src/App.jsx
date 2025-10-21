@@ -13,6 +13,7 @@ function LandingPageWrapper() {
   const [showContactModal, setShowContactModal] = useState(false);
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+  console.log(API_BASE_URL);
 
   // Initial ping on landing page load (silent warm-up)
   useEffect(() => {
